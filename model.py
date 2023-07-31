@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import math 
 
 # Define a class to handle the rainfall data
 class RainfallData:
@@ -81,3 +82,84 @@ rainls_df = reshaped_df.merge(landslide_df2, how='left', on='date') # use landsl
 
 # Print the first 5 rows of the merged DataFrame
 print(rainls_df.head(5))
+
+
+# Define a class to handle the modelling
+class Modelling:
+
+    # Define the constructor to initialize the DataFrame and the rainfall column
+    def __init__(self, df, rainfall_col):
+        # Save the DataFrame as an attribute
+        self.df = df
+        # Save the rainfall column as an attribute
+        self.rainfall_col = rainfall_col
+
+    # Define a method to perform the analysis
+    def analyse(self):
+        # Get the sample size (total landslides)
+        N = landslide_df2['landslides'].count() 
+        # Get the number of bins using Sturges rule
+        K = round(1 + 3.322 * math.log10(N)) 
+        print(K) # K = 10
+
+        # Get the max value of the rainfall data
+        max_rainfall = self.df[self.rainfall_col].max()
+        print(max_rainfall) 
+
+        # Divide by K to get the rainfall range
+        rainfall_range = max_rainfall / K
+        print(rainfall_range) 
+
+        # Initialize an empty list to store the intervals
+        intervals = [] 
+        # Loop from 0 to 10
+        for i in range(10):
+            # Calculate the lower and upper bounds of the interval
+            lower = i * rainfall_range
+            upper = (i + 1) * rainfall_range
+            # Append the interval as a tuple to the list
+            intervals.append((lower, upper))
+        print(intervals) # check list of intervals
+
+        # Convert the intervals list into an array of scalars
+        intervals_array = np.array(intervals).flatten()
+        # Remove the duplicate edges from the array
+        intervals_array = np.unique(intervals_array)
+        print(intervals_array) # check the intervals array
+
+        # Use the cut method to assign each rainfall value to a bin
+        self.df['bin'] = pd.cut(self.df[self.rainfall_col], bins= intervals_array)
+        print(self.df.head(10))# check the first 10 rows of the df
+
+        # Convert the bin column to a string type
+        self.df['bin'] = self.df['bin'].astype(str)
+
+        # Use the value_counts method on the bin column
+        df_result = self.df['bin'].value_counts()
+        # Convert the result to a df 
+        df_result = df_result.to_frame()
+        # Reset the index to make the bin column a regular column
+        df_result.reset_index(inplace=True)
+        # Rename the columns
+        df_result.columns = ['interval', 'count']
+        
+        return df_result
+
+
+# Create an instance of the Modelling class with rainls_df and 'rainfall' as arguments
+modelling_daily = Modelling(rainls_df, 'rainfall')
+# Call the analyse method to get the result DataFrame for daily rainfall
+df_daily = modelling_daily.analyse()
+print(df_daily) # check df
+
+# Create an instance of the Modelling class with rainls_df and 'rainfall_3days' as arguments
+modelling_3days = Modelling(rainls_df, 'rainfall_3days')
+# Call the analyse method to get the result DataFrame for 3 days rainfall
+df_3days = modelling_3days.analyse()
+print(df_3days) # check df
+
+# Create an instance of the Modelling class with rainls_df and 'rainfall_7days' as arguments
+modelling_7days = Modelling(rainls_df, 'rainfall_7days')
+# Call the analyse method to get the result DataFrame for 7 days rainfall
+df_7days = modelling_7days.analyse()
+print(df_7days) # check df
