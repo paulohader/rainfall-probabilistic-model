@@ -38,9 +38,46 @@ class RainfallData:
 
 # Create an instance of the RainfallData class with the CSV file name
 rainfall_data = RainfallData('raingauge-hb.csv')
-
 # Call the reshape method to get the reshaped DataFrame
 reshaped_df = rainfall_data.reshape()
-
 # Print the first 5 rows of the reshaped DataFrame
 print(reshaped_df.head(5))
+
+class LandslideData:
+
+    # Define the constructor to initialize the DataFrame and the month map
+    def __init__(self, csv_file):
+        # Read in the external data from the CSV file
+        self.landslide_df = pd.read_csv(csv_file, delimiter=';')
+        
+    # Define a method to prepare external data
+    def prepare_landslides(self):
+        # Convert the date column to datetime type and format it as YYYY-MM-DD
+        self.landslide_df['date'] = pd.to_datetime(self.landslide_df['date'], format='%d/%m/%Y').dt.strftime('%Y-%m-%d')
+        # Set the date column as the index
+        self.landslide_df.set_index('date', inplace=True)
+        # Return both DataFrames
+        return self.landslide_df, reshaped_df # return both DataFrames
+
+# Create an instance of the RainfallData class with the CSV file name
+rainfall_data = RainfallData('raingauge-hb.csv')
+# Call the reshape method to get the reshaped DataFrame
+reshaped_df = rainfall_data.reshape()
+# Print the first 5 rows of the reshaped DataFrame
+print(reshaped_df.head(5))
+
+
+# Create an instance of the LandslideData class with the CSV file name
+landslide_df = LandslideData('landslides.csv')
+# Call the prepare_landslides method 
+landslide_df2, reshaped_df2 = landslide_df.prepare_landslides() # assign to two separate variables
+
+# Convert both date columns to datetime64[ns, UTC]
+landslide_df2.index = pd.to_datetime(landslide_df2.index, utc=True) # convert index to datetime64[ns, UTC]
+reshaped_df.index = pd.to_datetime(reshaped_df.index, utc=True) # convert index to datetime64[ns, UTC]
+
+# Merge both DataFrames on the date index
+rainls_df = reshaped_df.merge(landslide_df2, how='left', on='date') # use landslide_df2 instead of landslide_df.landslide_df
+
+# Print the first 5 rows of the merged DataFrame
+print(rainls_df.head(5))
