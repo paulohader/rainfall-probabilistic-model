@@ -1,5 +1,6 @@
 ## Rainfall-triggering Landslide Probabilistic Model 
 This project aimed to produce the rainfall induced landslides from a raingauge station in a municipality of the São Paulo State, Brazil. The data is provided in two CSV files: raingauge-hb.csv and landslides.csv.
+Learn more about the method through the paper: https://link.springer.com/article/10.1007/s11069-021-04991-4
 
 ## Data Transformation
 The rainfall data is in a wide format, with each column representing a month and year, and each row representing a day of the month. The rainfall values are in millimeters. The landslide data is in a long format, with each row representing a landslide event, and the columns containing information such as date and location (neighbourhood).
