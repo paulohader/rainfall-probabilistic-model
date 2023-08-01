@@ -1,0 +1,6 @@
+2023-08-01 17:07:57,251 - DEBUG - Starting the script
+2023-08-01 17:07:57,253 - DEBUG - Creating an instance of the RainfallData class
+2023-08-01 17:07:57,295 - DEBUG - Calling the reshape method
+2023-08-01 17:07:57,424 - DEBUG - Creating an instance of the LandslideData class
+2023-08-01 17:07:57,430 - DEBUG - Calling the prepare_landslides method
+2023-08-01 17:07:57,444 - DEBUG - Merging the data
