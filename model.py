@@ -14,6 +14,7 @@ class RainfallData:
         # Create a dictionary to map Portuguese month names to month numbers
         self.month_map = { 'jan': 1, 'fev': 2, 'mar': 3, 'abr': 4, 'mai': 5, 'jun': 6, 'jul': 7, 'ago': 8, 'set': 9, 'out': 10, 'nov': 11, 'dez': 12 }
     
+    ##############################
     # 1.1 Reshape the rainfall data
     def reshape(self):
         # Drop the ‘Dia’ columns
@@ -27,7 +28,7 @@ class RainfallData:
         # Save the reshaped DataFrame to a new CSV file
         reshaped_df.to_csv('reshaped_data.csv', index=False)
         
-        #################################################################
+        #####################
         #1.1 Data Preparation 
         # Calculating the temporal windows of Rainfall for 3 and 7 days
         
@@ -50,7 +51,7 @@ reshaped_df = rainfall_data.reshape()
 # Print the first 5 rows of the reshaped DataFrame
 print(reshaped_df.head(5))
 
-#################################################################
+#################################
 #2. Landslide Data Transformation
 class LandslideData:
 
@@ -132,8 +133,8 @@ class Modelling:
         rainfall_range = max_rainfall / K
         print(rainfall_range) 
 
-        ##########################
-        #3.3 Generate the Ranges
+        ########################
+        #3.3 Generate the ranges
         # We need to generate the ranges with the width of 30.23
         # Initialize an empty list to store the intervals
         intervals = [] 
@@ -152,7 +153,7 @@ class Modelling:
         intervals_array = np.unique(intervals_array)
         print(intervals_array) # check the intervals array
         
-        ############################
+        ####################################################
         #3.4 Assign rainfall values for its respective ranges
         # Here we build a df to assign the daily rainfall per range
         # Use the cut method to assign each rainfall value to a bin with right=False parameter
@@ -183,8 +184,10 @@ class Modelling:
         return result_df
 
 
-############################
+###################################################################################
 #3.5 Assign rainfall-triggering landslides probability for each temporal resolution
+
+######################
 # A. Daily probability
 # Create an instance of the Modelling class with rainls_df and 'rainfall' as arguments
 modelling_daily = Modelling(rainls_df, 'rainfall')
@@ -192,6 +195,7 @@ modelling_daily = Modelling(rainls_df, 'rainfall')
 df_daily = modelling_daily.analyse()
 print(df_daily) # check df
 
+###########################################
 # B. 3 days of accumulated rain probability
 # Create an instance of the Modelling class with rainls_df and 'rainfall_3days' as arguments
 modelling_3days = Modelling(rainls_df, 'rainfall_3days')
@@ -199,6 +203,7 @@ modelling_3days = Modelling(rainls_df, 'rainfall_3days')
 df_3days = modelling_3days.analyse()
 print(df_3days) # check df
 
+###########################################
 # C. 7 days of accumulated rain probability
 # Create an instance of the Modelling class with rainls_df and 'rainfall_7days' as arguments
 modelling_7days = Modelling(rainls_df, 'rainfall_7days')
@@ -206,7 +211,10 @@ modelling_7days = Modelling(rainls_df, 'rainfall_7days')
 df_7days = modelling_7days.analyse()
 print(df_7days) # check df
 
+
+##################################
 # 4. Getting the Probability Level
+
 # Define a function to assign the rainfall levels
 def assign_rainfall_level(df):
     # Define the labels for the rainfall levels
